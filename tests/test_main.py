@@ -17,15 +17,13 @@ def teardown_module(module):
     shutil.rmtree(OUTPUT_DIR)
 
 def test_denoise():
-    # Créer un fichier audio temporaire
-    test_file_path = os.path.join(UPLOAD_DIR, "test_audio.wav")
-    with open(test_file_path, "wb") as f:
-        f.write(b"Dummy audio content")
+    real_audio_path = "/home/mendo/Downloads/PROJETS_5/audio_denoising_app/data/b1.wav"
 
     # Ouvrir le fichier en mode binaire pour le test
-    with open(test_file_path, "rb") as f:
-        response = client.post("/denoise/", files={"file": ("test_audio.wav", f, "audio/wav")})
+    with open(real_audio_path, "rb") as f:
+        response = client.post("/denoise/", files={"file": ("b1.wav", f, "audio/wav")})
 
+    # Vérifie la réponse
     assert response.status_code == 200
     assert response.headers["content-type"] == "audio/opus"
     assert "attachment" in response.headers["content-disposition"]

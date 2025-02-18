@@ -13,7 +13,7 @@ jobs:
     steps:  
       - name: 🛠️ Checkout repository  
         uses: actions/checkout@v3  
-      
+
       - name: 🔧 Set up Python  
         uses: actions/setup-python@v4  
         with:  
@@ -22,10 +22,18 @@ jobs:
       - name: 📦 Install dependencies  
         run: |  
           python -m pip install --upgrade pip  
-          pip install -r requirements.txt  
+          pip install -r requirements.txt
+
+      - name: 🚀 Start FastAPI server
+        run: |
+          # Démarrer le serveur FastAPI en arrière-plan
+          nohup uvicorn backend.api:app --host 0.0.0.0 --port 8000 &
+
+      - name: 🕒 Wait for the server to start
+        run: |
+          sleep 10  # Attendre 10 secondes pour que le serveur démarre
 
       - name: Run Tests
         run: |
-            export PYTHONPATH=$GITHUB_WORKSPACE
-            pytest tests/
-          
+          export PYTHONPATH=$GITHUB_WORKSPACE
+          pytest tests/

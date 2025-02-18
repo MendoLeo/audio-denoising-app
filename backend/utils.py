@@ -42,7 +42,7 @@ def convert_to_opus(wav_file, output_dir):
     subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return opus_file
 
-def denoiser(audio_path: str)-> str:
+def denoise(audio_path: str)-> str:
     """
     denoiser : this function remove background noise on input audio and produce donoising audio
 
