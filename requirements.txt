@@ -5,3 +5,4 @@ fastapi
 denoiser
 torchaudio
 pytest
+httpx
