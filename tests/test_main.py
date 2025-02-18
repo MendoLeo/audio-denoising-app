@@ -17,7 +17,7 @@ def teardown_module(module):
     shutil.rmtree(OUTPUT_DIR)
 
 def test_denoise():
-    real_audio_path = "/home/mendo/Downloads/PROJETS_5/audio_denoising_app/data/b1.wav"
+    real_audio_path = "data/b1.wav"
 
     # Ouvrir le fichier en mode binaire pour le test
     with open(real_audio_path, "rb") as f:
