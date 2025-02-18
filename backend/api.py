@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
-from utils import *
+from utils import (denoiser,convert_to_wav,convert_to_opus)
 import os
 import shutil
 
@@ -30,7 +30,7 @@ async def api_denoise(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     try:
-        denoised_path = denoiser(input_path)
+        denoised_path = denoiser(input_path) 
         final_opus = convert_to_opus(denoised_path,OUTPUT_DIR )
         return FileResponse(final_opus, media_type="audio/opus", filename=os.path.basename(denoised_path))
     except Exception as e:
