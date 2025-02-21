@@ -6,3 +6,4 @@ denoiser
 torchaudio
 pytest
 httpx
+python-multipart
