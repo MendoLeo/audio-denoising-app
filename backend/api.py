@@ -36,23 +36,3 @@ async def api_denoise(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Denoising failed: {e}")
 
-@app.post("/process-batch/")
-async def api_process_batch(files: list[UploadFile] = File(...)):
-    output_files = []
-
-    for file in files:
-        input_path = os.path.join(UPLOAD_DIR, file.filename)
-
-        with open(input_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-
-        try:
-            # Process each file
-            wav_path = convert_to_wav(input_path, OUTPUT_DIR)
-            denoised_path = denoise(wav_path)
-            final_opus = convert_to_opus(denoised_path,OUTPUT_DIR )
-            output_files.append(final_opus)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Batch processing failed: {e}")
-
-    return {"processed_files": [os.path.basename(path) for path in output_files]}
