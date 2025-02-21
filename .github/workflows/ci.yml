@@ -5,6 +5,7 @@ on:
     branches: [dev, backend]  
   pull_request:  
     branches: [main]  
+  workflow_dispatch:  # Permet de lancer le workflow manuellement via l'interface GitHub
 
 jobs:  
   test_backend:  
