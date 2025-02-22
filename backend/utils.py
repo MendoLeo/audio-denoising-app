@@ -42,31 +42,20 @@ def convert_to_opus(wav_file, output_dir):
     subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return opus_file
 
-def denoise(audio_path: str)-> str:
-    """
-    denoiser : this function remove background noise on input audio and produce donoising audio
+def denoise(audio_path: str) -> str:
+    """Dénoise un fichier audio en utilisant le CPU ou le GPU selon la disponibilité."""
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = pretrained.dns64().to(device)
 
-    Args:
-        audio_path (str): _description_
-
-    Returns:
-        str: _description_
-    """
-    model = pretrained.dns64()
+    # Charger et convertir l'audio
     wav, sr = torchaudio.load(audio_path)
-    wav = convert_audio(wav, sr, model.sample_rate, model.chin)
+    wav = convert_audio(wav, sr, model.sample_rate, model.chin).to(device)
 
+    # Dénoiser
     with torch.no_grad():
-        denoised = model(wav[None])[0]
+        denoised = model(wav[None])[0].cpu()  # Assurez-vous de ramener en CPU pour torchaudio.save
 
+    # Sauvegarde du fichier
     denoised_path = audio_path.replace('.wav', '_denoised.wav')
-    torchaudio.save(denoised_path, denoised.cpu(), model.sample_rate)
-
+    torchaudio.save(denoised_path, denoised, model.sample_rate)
     return denoised_path
-
-#################### CAS D'USAGE D'UN ACCELERATEUR #################################
-
-"""model = pretrained.dns64().cuda()
-wav, sr = torchaudio.load(audio_path)
-wav = convert_audio(wav.cuda(), sr, model.sample_rate, model.chin)
-"""
